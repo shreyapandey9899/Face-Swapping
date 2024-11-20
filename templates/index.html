@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Swap Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        document.getElementById("source_image").addEventListener("change", function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById("source-image").src = event.target.result;
+                document.getElementById("source-image").style.display = "block";
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+
+        document.getElementById("target_image").addEventListener("change", function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById("target-image").src = event.target.result;
+                document.getElementById("target-image").style.display = "block";
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
+            <h1>Face Swap Tool</h1>
+        </header>
+        
+        <!-- Image upload form -->
+        <div class="upload-section">
+            <h2>Upload Your Images</h2>
+            <form action="/swap_faces" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label for="source_image">Source Image</label>
+                    <input type="file" name="source_image" id="source_image" accept="image/*" required>
+                    <img id="source-image" src="#" alt="Source Image Preview" style="max-width: 300px; display:none;">
+                </div>
+                <div class="input-group">
+                    <label for="target_image">Target Image</label>
+                    <input type="file" name="target_image" id="target_image" accept="image/*" required>
+                    <img id="target-image" src="#" alt="Target Image Preview" style="max-width: 300px; display:none;">
+                </div>
+                <button type="submit" class="submit-btn">Swap Faces</button>
+            </form>
+        </div>
+
+        <!-- Display Result Image -->
+        {% if result_image %}
+            <div class="result-section" id="result-section">
+                <h2>Result Image</h2>
+                <div id="result-box">
+                    <img id="result-image" src="{{ url_for('static', filename=result_image) }}" alt="Result Image">
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
